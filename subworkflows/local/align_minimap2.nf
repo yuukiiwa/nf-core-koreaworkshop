@@ -2,22 +2,34 @@
 // Check input samplesheet and get read channels
 //
 
-include { SAMPLESHEET_CHECK } from '../../modules/local/samplesheet_check'
+include { MINIMAP2_INDEX } from '../../modules/nf-core/minimap2/index/main'
+include { MINIMAP2_ALIGN } from '../../modules/nf-core/minimap2/align/main'
+include { SAMTOOLS_INDEX } from '../../modules/nf-core/samtools/index/main'
 
-workflow INPUT_CHECK {
+workflow ALIGN_MINIMAP2 {
     take:
-    samplesheet // file: /path/to/samplesheet.csv
+    ch_fastq //[meta, fastq]
+    ch_fasta //[meta2, fasta]
 
     main:
-    SAMPLESHEET_CHECK ( samplesheet )
-        .csv
-        .splitCsv ( header:true, sep:',' )
-        .map { create_fastq_channel(it) }
-        .set { reads }
+    MINIMAP2_INDEX ( ch_fasta )
+    ch_fasta_index = MINIMAP2_INDEX.out.index
+
+    bam_format = true
+    cigar_paf_format = false
+    cigar_bam = false
+    MINIMAP2_ALIGN ( ch_fastq, ch_fasta, bam_format, cigar_paf_format, cigar_bam )
+    ch_bam = MINIMAP2_ALIGN.out.bam
+    
+    SAMTOOLS_INDEX ( ch_bam )
+    ch_bai = SAMTOOLS_INDEX.out.bai
+
+    ch_bam
+        .join( ch_bai, by: 0 )
+        .set { ch_bam_bai }
 
     emit:
-    reads                                     // channel: [ val(meta), [ reads ] ]
-    versions = SAMPLESHEET_CHECK.out.versions // channel: [ versions.yml ]
+    ch_bam_bai    
 }
 
 // Function to get list of [ meta, [ fastq_1, fastq_2 ] ]
