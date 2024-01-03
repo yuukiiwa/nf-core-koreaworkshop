@@ -36,7 +36,7 @@ ch_multiqc_custom_methods_description = params.multiqc_methods_description ? fil
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
 include { ALIGN_MINIMAP2     } from '../subworkflows/local/align_minimap2.nf'
-include { BAM_STATS_SAMTOOLS } from '../subworkflows/nf-core/bam_stats_samtools.nf'
+include { BAM_STATS_SAMTOOLS } from '../subworkflows/nf-core/bam_stats_samtools/main.nf'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -60,27 +60,42 @@ include { BAM_STATS_SAMTOOLS } from '../subworkflows/nf-core/bam_stats_samtools.
 // Info required for completion email and summary
 def multiqc_report = []
 
+def get_sample_info(LinkedHashMap row) {
+    def meta              = [:]
+    meta.id               = row.sample
+    fastq                 = row.fastq
+
+    fastq_meta = [ meta, fastq ]
+
+    return fastq_meta
+}
+
 workflow KOREAWORKSHOP {
 
-    ch_versions = Channel.empty()
+    //ch_versions = Channel.empty()
+    // 
+    samplesheet=Channel.from(file(params.input))
+
+    samplesheet
+        .splitCsv ( header:true, sep:',' )
+        .map { get_sample_info(it) }
+        .set { ch_fastq }
+
+    fasta = Channel.from(file(params.fasta))
+    fasta
+        .map { it -> [ [id: 'reference'], it ] }
+        .set { ch_fasta }
 
     //
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
     //
-    sample_name = Channel.from(params.sample_name)
-    fastq = Channel.from(params.fastq)
-    fastq
-        .map { it -> [ [id:sample_name]], it }
-        .set { ch_fastq }
-    fasta = Channel.from(params.fasta)
-    fasta
-        .map { it -> [ [id: 'reference']], it }
-        .set { ch_fasta }
+    ch_fastq.view()
 
     ALIGN_MINIMAP2 ( ch_fastq, ch_fasta )
     ch_bam_bai = ALIGN_MINIMAP2.out.ch_bam_bai
 
     BAM_STATS_SAMTOOLS ( ch_bam_bai, ch_fasta )
+}
     //ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
     // TODO: OPTIONAL, you can use nf-validation plugin to create an input channel from the samplesheet with Channel.fromSamplesheet("input")
     // See the documentation https://nextflow-io.github.io/nf-validation/samplesheets/fromSamplesheet/
@@ -120,7 +135,7 @@ workflow KOREAWORKSHOP {
     //    ch_multiqc_logo.toList()
     //)
     //multiqc_report = MULTIQC.out.report.toList()
-}
+//}
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
