@@ -47,7 +47,7 @@ docker info
 
 *if you encounter any problem with the installation, please look for Yuk Kei (likely in a red hoodie and a yellow backpack) after the talks on Jan 31. between 17:20-18:00. We will set up a table at KOGO for potential troubleshooting.*
 
-## Pipeline output
+## Running the pipeline
 
 We will use the following samples for the pipeline:
 ```
