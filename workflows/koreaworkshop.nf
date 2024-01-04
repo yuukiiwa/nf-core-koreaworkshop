@@ -89,7 +89,7 @@ workflow KOREAWORKSHOP {
     //
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
     //
-    ch_fastq.view()
+    //ch_fastq.view()
 
     ALIGN_MINIMAP2 ( ch_fastq, ch_fasta )
     ch_bam_bai = ALIGN_MINIMAP2.out.ch_bam_bai

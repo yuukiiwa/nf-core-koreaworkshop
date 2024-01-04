@@ -1,2 +1,2 @@
 sample,fastq
-K562,/home/wanyk/Desktop/workshop/inputs/NA12878_DNA.fastq.gz
+K562,https://github.com/nf-core/test-datasets/raw/nanoseq/fastq/demultiplexed/NA12878_DNA.fastq.gz
