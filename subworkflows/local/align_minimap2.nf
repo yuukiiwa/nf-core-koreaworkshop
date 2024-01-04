@@ -18,7 +18,7 @@ workflow ALIGN_MINIMAP2 {
     bam_format = true
     cigar_paf_format = false
     cigar_bam = false
-    MINIMAP2_ALIGN ( ch_fastq, ch_fasta, bam_format, cigar_paf_format, cigar_bam )
+    MINIMAP2_ALIGN ( ch_fastq, ch_fasta_index, bam_format, cigar_paf_format, cigar_bam )
     ch_bam = MINIMAP2_ALIGN.out.bam
     
     SAMTOOLS_INDEX ( ch_bam )
