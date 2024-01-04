@@ -51,12 +51,11 @@ docker info
 
 We will use the following samples for the pipeline:
 ```
-wget https://github.com/nf-core/test-datasets/blob/nanoseq/fastq/demultiplexed/NA12878_DNA.fastq.gz
 wget https://github.com/nf-core/test-datasets/blob/nanoseq/reference/GRCh38_EDIL3.fa 
 ```
 You can run the pipeline with the following command:
 ```
-nextflow nf-core-koreaworkshop/main.nf --input nf-core-koreaworkshop/samplesheet.csv --outdir output --fasta inputs/GRCh38_EDIL3.fa -profile docker
+./nextflow nf-core-koreaworkshop/main.nf --input nf-core-koreaworkshop/samplesheet.csv --outdir output --fasta GRCh38_EDIL3.fa -profile docker
 ```
 When the pipeline is done running, it should look like the following:
 ![Screenshot from 2024-01-04 09-55-56](https://github.com/yuukiiwa/nf-core-koreaworkshop/assets/41866052/3c20437f-c491-40b0-990d-91e25cefdff6)
