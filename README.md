@@ -45,6 +45,12 @@ Check whether it is installed with the following:
 docker info
 ```
 
+### repository clone
+```
+git clone https://github.com/yuukiiwa/nf-core-koreaworkshop.git
+```
+
+
 *if you encounter any problem with the installation, please look for Yuk Kei (likely in a red hoodie and a yellow backpack) after the talks on Jan 31. between 17:20-18:00. We will set up a table at KOGO for potential troubleshooting.*
 
 ## Running the pipeline
