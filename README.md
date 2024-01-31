@@ -55,6 +55,11 @@ git clone https://github.com/yuukiiwa/nf-core-koreaworkshop.git
 
 ## Running the pipeline
 
+We will use the following samplesheet.csv for the pipeline:
+```
+wget https://raw.githubusercontent.com/yuukiiwa/nf-core-koreaworkshop/master/samplesheet.csv
+```
+
 We will use the following samples for the pipeline:
 ```
 wget https://github.com/nf-core/test-datasets/blob/nanoseq/reference/GRCh38_EDIL3.fa 
